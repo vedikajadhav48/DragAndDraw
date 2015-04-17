@@ -1,6 +1,8 @@
 package com.example.vedikajadhav.draganddraw;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.nfc.Tag;
 import android.util.AttributeSet;
@@ -17,6 +19,8 @@ public class BoxDrawingView extends View {
     public static final String TAG = "BoxDrawingView";
     private Box mCurrentBox;
     private ArrayList<Box> mBoxes = new ArrayList<Box>();
+    private Paint mBoxPaint;
+    private Paint mBackgroundPaint;
 
     //Used when creating the view in code
     public BoxDrawingView(Context context) {
@@ -26,6 +30,14 @@ public class BoxDrawingView extends View {
     //Used when inflating the view from XML
     public BoxDrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        //Paint the boxes a nice semitransparent red (ARGB)
+        mBoxPaint = new Paint();
+        mBoxPaint.setColor(0x22ff0000);
+
+        //Paint the background off-white
+        mBackgroundPaint = new Paint();
+        mBackgroundPaint.setColor(0xfff8efe0);
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent){
@@ -56,5 +68,20 @@ public class BoxDrawingView extends View {
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        //Fill the background
+        canvas.drawPaint(mBackgroundPaint);
+
+        for(Box box:mBoxes){
+            float left = Math.min(box.getOrigin().x, box.getCurrent().x);
+            float right = Math.max(box.getOrigin().x, box.getCurrent().x);
+            float top = Math.min(box.getOrigin().y, box.getCurrent().y);
+            float bottom = Math.max(box.getOrigin().y, box.getCurrent().y);
+
+            canvas.drawRect(left, top, right, bottom, mBoxPaint);
+        }
     }
 }

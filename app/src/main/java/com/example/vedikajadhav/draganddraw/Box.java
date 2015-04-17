@@ -20,4 +20,8 @@ public class Box {
     public PointF getOrigin() {
         return mOrigin;
     }
+
+    public PointF getCurrent() {
+        return mCurrent;
+    }
 }
